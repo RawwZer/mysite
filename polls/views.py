@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .models import Question
+from .models import Question, Choice
 
 
 def index(request):
@@ -9,8 +9,17 @@ def index(request):
 
 def show_question(request, question_id):
 
-	question = Question.objects.get(id=question_id).question_text
-	return HttpResponse(f"Hello, your question is {question}")
+	question = Question.objects.get(id=question_id)
+	choices = Choice.objects.all().filter(question = question)
+	return render(
+		request,
+		"polls/question.html",
+		{
+			"question":question,
+			"choices":choices
+		}
+
+		)
 
 def show_questions(request):
 	questions = Question.objects.all()
